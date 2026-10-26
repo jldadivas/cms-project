@@ -9,6 +9,7 @@ import { imageHero1 } from './image-hero-1'
 import { post1 } from './post-1'
 import { post2 } from './post-2'
 import { post3 } from './post-3'
+import { seedGuidePages } from './guide-topics'
 
 const collections: CollectionSlug[] = [
   'categories',
@@ -215,6 +216,8 @@ export const seed = async ({
     }),
   ])
 
+  await seedGuidePages(payload)
+
   payload.logger.info(`— Seeding globals...`)
 
   await Promise.all([
@@ -225,18 +228,22 @@ export const seed = async ({
           {
             link: {
               type: 'custom',
-              label: 'Posts',
-              url: '/posts',
+              label: 'Topics',
+              url: '/#topics',
             },
           },
           {
             link: {
-              type: 'reference',
-              label: 'Contact',
-              reference: {
-                relationTo: 'pages',
-                value: contactPage.id,
-              },
+              type: 'custom',
+              label: 'Architecture',
+              url: '/system-architecture',
+            },
+          },
+          {
+            link: {
+              type: 'custom',
+              label: 'CMS',
+              url: '/admin',
             },
           },
         ],
@@ -249,24 +256,22 @@ export const seed = async ({
           {
             link: {
               type: 'custom',
-              label: 'Admin',
+              label: 'Guide',
+              url: '/#topics',
+            },
+          },
+          {
+            link: {
+              type: 'custom',
+              label: 'System architecture',
+              url: '/system-architecture',
+            },
+          },
+          {
+            link: {
+              type: 'custom',
+              label: 'CMS',
               url: '/admin',
-            },
-          },
-          {
-            link: {
-              type: 'custom',
-              label: 'Source Code',
-              newTab: true,
-              url: 'https://github.com/payloadcms/payload/tree/3.x/templates/website',
-            },
-          },
-          {
-            link: {
-              type: 'custom',
-              label: 'Payload',
-              newTab: true,
-              url: 'https://payloadcms.com/',
             },
           },
         ],

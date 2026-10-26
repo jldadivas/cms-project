@@ -17,7 +17,7 @@ const blockComponents = {
 }
 
 export const RenderBlocks: React.FC<{
-  blocks: Page['layout'][0][]
+  blocks: NonNullable<Page['layout']>
 }> = (props) => {
   const { blocks } = props
 
@@ -35,7 +35,7 @@ export const RenderBlocks: React.FC<{
             if (Block) {
               return (
                 <div className="my-16" key={index}>
-                  {/* @ts-expect-error there may be some mismatch between the expected types here */}
+                  {/* @ts-expect-error some block component prop types omit this shared override */}
                   <Block {...block} disableInnerContainer />
                 </div>
               )

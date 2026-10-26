@@ -1,29 +1,20 @@
 import clsx from 'clsx'
+import { Smartphone } from 'lucide-react'
 import React from 'react'
 
 interface Props {
   className?: string
-  loading?: 'lazy' | 'eager'
-  priority?: 'auto' | 'high' | 'low'
 }
 
 export const Logo = (props: Props) => {
-  const { loading: loadingFromProps, priority: priorityFromProps, className } = props
-
-  const loading = loadingFromProps || 'lazy'
-  const priority = priorityFromProps || 'low'
+  const { className } = props
 
   return (
-    /* eslint-disable @next/next/no-img-element */
-    <img
-      alt="Payload Logo"
-      width={193}
-      height={34}
-      loading={loading}
-      fetchPriority={priority}
-      decoding="async"
-      className={clsx('max-w-[9.375rem] w-full h-[34px]', className)}
-      src="https://raw.githubusercontent.com/payloadcms/payload/3.x/packages/ui/src/assets/payload-logo-light.svg"
-    />
+    <span className={clsx('inline-flex items-center gap-2.5', className)}>
+      <span className="grid size-9 place-items-center rounded-full bg-[#d0e978] text-[#173c34]">
+        <Smartphone aria-hidden="true" className="size-5" />
+      </span>
+      <span className="text-base font-semibold">Expo Go Guide</span>
+    </span>
   )
 }

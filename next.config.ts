@@ -20,6 +20,15 @@ const nextConfig: NextConfig = {
   images: {
     localPatterns: [
       {
+        pathname: '/aquasentinel-system.png',
+      },
+      {
+        pathname: '/iot-system-hero.jpg',
+      },
+      {
+        pathname: '/docs/**',
+      },
+      {
         pathname: '/api/media/file/**',
       },
     ],

@@ -6,8 +6,8 @@ import { GeistSans } from 'geist/font/sans'
 import React from 'react'
 
 import { AdminBar } from '@/components/AdminBar'
+import { IoTNavigation } from '@/components/IoTNavigation'
 import { Footer } from '@/Footer/Component'
-import { Header } from '@/Header/Component'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
@@ -34,9 +34,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             }}
           />
 
-          <Header />
-          {children}
-          <Footer />
+          <div className="flex min-h-screen flex-col bg-[#07121f]">
+            <IoTNavigation />
+            <div className="min-w-0 flex-1">{children}</div>
+            <Footer />
+          </div>
         </Providers>
       </body>
     </html>

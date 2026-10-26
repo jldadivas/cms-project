@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
 
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
@@ -61,6 +62,20 @@ export const Pages: CollectionConfig<'pages'> = {
       required: true,
     },
     {
+      name: 'topicOrder',
+      type: 'number',
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'summary',
+      type: 'textarea',
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
       type: 'tabs',
       tabs: [
         {
@@ -70,10 +85,128 @@ export const Pages: CollectionConfig<'pages'> = {
         {
           fields: [
             {
+              name: 'topicSections',
+              type: 'array',
+              label: 'Guide Sections',
+              admin: {
+                initCollapsed: true,
+              },
+              fields: [
+                {
+                  name: 'heading',
+                  type: 'text',
+                  required: true,
+                },
+                {
+                  name: 'lessonSlug',
+                  type: 'text',
+                  admin: {
+                    description: 'Optional URL part for the individual lesson page.',
+                  },
+                },
+                {
+                  name: 'body',
+                  type: 'textarea',
+                  required: true,
+                },
+                {
+                  name: 'description',
+                  type: 'textarea',
+                  admin: {
+                    description: 'A short preview shown before the lesson is opened.',
+                  },
+                },
+                {
+                  name: 'content',
+                  type: 'richText',
+                  editor: lexicalEditor(),
+                  admin: {
+                    description: 'Optional formatted lesson content with links and lists.',
+                  },
+                },
+                {
+                  name: 'image',
+                  type: 'upload',
+                  relationTo: 'media',
+                },
+                {
+                  name: 'videoUrl',
+                  type: 'text',
+                  admin: {
+                    description: 'Direct video URL or a YouTube/Vimeo link.',
+                  },
+                },
+                {
+                  name: 'videoTitle',
+                  type: 'text',
+                  admin: {
+                    description: 'Optional title displayed below the video.',
+                  },
+                },
+                {
+                  name: 'codeExamples',
+                  type: 'array',
+                  admin: {
+                    initCollapsed: true,
+                  },
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      required: true,
+                    },
+                    {
+                      name: 'language',
+                      type: 'select',
+                      defaultValue: 'bash',
+                      options: [
+                        { label: 'Bash', value: 'bash' },
+                        { label: 'TSX', value: 'tsx' },
+                        { label: 'TypeScript', value: 'typescript' },
+                        { label: 'JavaScript', value: 'javascript' },
+                        { label: 'JSON', value: 'json' },
+                        { label: 'C++', value: 'cpp' },
+                        { label: 'Python', value: 'python' },
+                        { label: 'Text', value: 'text' },
+                      ],
+                    },
+                    {
+                      name: 'code',
+                      type: 'textarea',
+                      required: true,
+                      admin: {
+                        rows: 10,
+                      },
+                    },
+                  ],
+                },
+                {
+                  name: 'steps',
+                  type: 'array',
+                  label: 'Step-by-step',
+                  admin: {
+                    initCollapsed: true,
+                  },
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      required: true,
+                    },
+                    {
+                      name: 'details',
+                      type: 'textarea',
+                      required: true,
+                    },
+                  ],
+                },
+              ],
+            },
+            {
               name: 'layout',
               type: 'blocks',
               blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock],
-              required: true,
+              required: false,
               admin: {
                 initCollapsed: true,
               },

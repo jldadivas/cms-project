@@ -1,6 +1,62 @@
-# Payload Website Template
+# Expo Go IoT Telemetry System & Architecture Guide
 
-This is the official [Payload Website Template](https://github.com/payloadcms/payload/blob/3.x/templates/website). Use it to power websites, blogs, or portfolios from small to enterprise. This repo includes a fully-working backend, enterprise-grade admin panel, and a beautifully designed, production-ready website.
+This repository contains the full end-to-end stack and educational portal for real-time IoT sensor telemetry:
+
+1. **Physical Sensors & ESP32 Firmware**: Adafruit VL53L0X Time-of-Flight distance (I2C0: GPIO 21/22), BH1750 ambient light (I2C1: GPIO 18/19), and analog soil moisture probe (ADC1: GPIO 34). Publishes JSON packets every 5 seconds over Wi-Fi via `PubSubClient` to the Mosquitto MQTT broker.
+2. **Raspberry Pi MQTT-to-HTTP Bridge (`main.py`)**: Python FastAPI backend with `paho-mqtt` v2. Subscribes to `esp32/tof_light_soil_data`, computes calibrated soil moisture percentages (`SOIL_DRY_RAW=2527`, `SOIL_WET_RAW=1237`), stores readings in SQLite (`sensor_readings.sqlite3`), and exposes `GET /api/readings/current`, `GET /api/readings`, and `GET /api/health` on port 8080.
+3. **Expo Go Mobile App (`mobile-app/`)**: Standalone React Native TypeScript application that polls `/api/readings/current` and renders real-time telemetry cards for distance, illuminance, soil moisture, and Wi-Fi signal strength.
+4. **Educational Web Portal (`src/`)**: Next.js App Router website featuring interactive architecture maps, step-by-step wiring guides, and copy-ready firmware and backend code examples.
+
+---
+
+## Quick Reference & Running the Services
+
+### 1. Run the Python Backend (`main.py`) on Raspberry Pi
+
+```bash
+# Setup virtual environment and dependencies
+python3 -m venv .venv
+source .venv/bin/activate
+pip install fastapi uvicorn paho-mqtt python-dotenv
+
+# Run the MQTT-to-HTTP bridge on port 8080
+uvicorn main:app --host 0.0.0.0 --port 8080 --reload
+```
+
+- **Swagger Docs**: `http://<PI_LAN_IP>:8080/docs`
+- **Current Reading**: `http://<PI_LAN_IP>:8080/api/readings/current`
+- **Health Check**: `http://<PI_LAN_IP>:8080/api/health`
+
+### 2. Run the Expo Go Mobile App (`mobile-app/`)
+
+```bash
+cd mobile-app
+npm install
+
+# Configure your Raspberry Pi LAN IP in mobile-app/.env:
+# EXPO_PUBLIC_API_BASE_URL=http://<PI_LAN_IP>:8080
+
+npx expo start
+```
+Scan the QR code with Expo Go on iOS or Android. Ensure your phone and Raspberry Pi are connected to the same local Wi-Fi network.
+
+### 3. Run the Documentation Web Portal
+
+```bash
+npm install
+npm run dev
+```
+Open `http://localhost:3000` to explore:
+- `/results` - Complete documentation of sensors, full technology stack, calibration math, and live pipeline outputs
+- `/code-examples` - Full C++ Arduino sketch, Python `main.py` bridge, and React Native screen
+- `/how-it-works` - Step-by-step pipeline from hardware sensors to mobile display
+- `/esp32` - Dual I2C wiring diagrams and PubSubClient configuration
+- `/raspberry-pi` - Mosquitto broker setup, SQLite schema, and FastAPI service
+- `/expo-go` - React Native setup and mobile troubleshooting guide
+
+## Project guide
+
+This project is a learning website focused on Expo Go, React Native, and connecting mobile apps to Raspberry Pi and ESP32 devices. It includes a working Payload CMS backend, an admin panel, and a content-rich site for exploring mobile app development and hardware communication.
 
 This template is right for you if you are working on:
 
