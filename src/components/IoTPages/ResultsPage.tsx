@@ -175,6 +175,78 @@ const galleryPhotos: GalleryItem[] = [
       { label: 'Format', value: '720p HD MP4' },
     ],
   },
+  {
+    id: 'esp32-breadboard-setup',
+    title: 'ESP32 Sensor Breadboard Wiring',
+    subtitle: 'Physical Assembly of the Sensor Node',
+    src: '/docs/esp32-breadboard-wiring-photo.jpg',
+    tag: 'ESP32 HARDWARE',
+    tagColor: 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30',
+    description:
+      'Physical wiring photo of the ESP32 sensor setup on a breadboard. Use it as a visual reference alongside the sensor connection and setup instructions.',
+    specs: [
+      { label: 'Device', value: 'ESP32' },
+      { label: 'Use', value: 'Hardware wiring reference' },
+    ],
+  },
+  {
+    id: 'esp32-circuit-diagram',
+    title: 'ESP32 Sensor Circuit Diagram',
+    subtitle: 'Component Wiring and Connection Reference',
+    src: '/docs/esp32-cirkit-wiring-diagram.png',
+    tag: 'WIRING DIAGRAM',
+    tagColor: 'bg-blue-500/10 text-blue-300 border-blue-500/30',
+    description:
+      'Circuit diagram for the ESP32 sensor system. Consult it when following the hardware wiring steps and identifying component connections.',
+    specs: [
+      { label: 'Device', value: 'ESP32 sensor node' },
+      { label: 'Use', value: 'Wiring reference' },
+    ],
+  },
+  {
+    id: 'esp32-mqtt-serial-output',
+    title: 'ESP32 MQTT Serial Monitor Output',
+    subtitle: 'Sensor Telemetry Published to the MQTT Topic',
+    src: '/docs/esp32-arduino-serial-mqtt-output.jpg',
+    tag: 'MQTT TELEMETRY',
+    tagColor: 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30',
+    description:
+      'Arduino serial monitor capture showing the ESP32 sensor telemetry and MQTT publishing output used to verify device-to-broker communication.',
+    specs: [
+      { label: 'Device', value: 'ESP32' },
+      { label: 'Purpose', value: 'MQTT publish verification' },
+    ],
+  },
+  {
+    id: 'raspberry-pi-uvicorn-logs',
+    title: 'Raspberry Pi Uvicorn and MQTT Logs',
+    subtitle: 'Backend Service Output on the Raspberry Pi',
+    src: '/docs/raspberry-pi-uvicorn-mqtt-logs.jpg',
+    tag: 'RASPBERRY PI BACKEND',
+    tagColor: 'bg-purple-500/10 text-purple-300 border-purple-500/30',
+    description:
+      'Raspberry Pi terminal capture documenting the Uvicorn API server and MQTT service as they support the sensor data pipeline.',
+    specs: [
+      { label: 'Device', value: 'Raspberry Pi' },
+      { label: 'Services', value: 'Uvicorn and MQTT' },
+    ],
+  },
+  {
+    id: 'iot-system-live-demo',
+    title: 'End-to-End IoT System Live Demo',
+    subtitle: 'ESP32 Sensor, Raspberry Pi Backend, and Mobile Client',
+    src: '/docs/iot-system-demo-poster.jpg',
+    videoSrc: '/docs/iot-system-live-demo.mp4',
+    tag: 'SYSTEM DEMONSTRATION',
+    tagColor: 'bg-rose-500/10 text-rose-300 border-rose-500/30',
+    isVideo: true,
+    description:
+      'Live demonstration of the integrated IoT system, following sensor data from the ESP32 through the Raspberry Pi backend to the mobile application.',
+    specs: [
+      { label: 'Source', value: 'IoT system' },
+      { label: 'Playback', value: 'HTML5 video' },
+    ],
+  },
 ]
 
 const sensorsList = [
@@ -435,6 +507,7 @@ export function ResultsPage() {
   const [activeTab, setActiveTab] = useState(outputTabs[0].id)
   const [modalPhoto, setModalPhoto] = useState<GalleryItem | null>(null)
   const [videoRotated, setVideoRotated] = useState(false)
+  const [selectedVideoStream, setSelectedVideoStream] = useState<'obs' | 'demo'>('obs')
   const currentOutput = outputTabs.find((t) => t.id === activeTab) || outputTabs[0]
 
   return (
@@ -456,7 +529,7 @@ export function ResultsPage() {
               <h2 className="text-2xl font-bold text-white mt-1">Physical Hardware &amp; Live Terminal Gallery</h2>
             </div>
             <span className="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 font-mono text-xs text-cyan-300">
-              8 Real-World Setup Captures (Photos &amp; Video)
+              13 Real-World Setup Captures (Photos &amp; Video)
             </span>
           </div>
 
@@ -473,6 +546,7 @@ export function ResultsPage() {
                   <img
                     alt={photo.title}
                     className="size-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
                     src={photo.src}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#07121f] via-transparent to-transparent opacity-80" />
@@ -585,9 +659,31 @@ export function ResultsPage() {
               </span>
               <h2 className="text-2xl font-bold text-white mt-1">Live ESP32 Serial Telemetry Video Stream</h2>
             </div>
-            <span className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1 font-mono text-xs text-rose-300 flex items-center gap-1.5">
-              <Video className="size-3.5" /> 36-Second Recorded Demo
-            </span>
+            {/* Stream Selector Buttons */}
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                className={`rounded-xl px-3 py-1.5 font-mono text-xs transition ${
+                  selectedVideoStream === 'obs'
+                    ? 'bg-rose-500 font-bold text-white shadow-md shadow-rose-500/30'
+                    : 'border border-white/10 bg-white/[0.04] text-slate-300 hover:bg-white/[0.08]'
+                }`}
+                onClick={() => setSelectedVideoStream('obs')}
+                type="button"
+              >
+                🔴 OBS Live Hardware Stream
+              </button>
+              <button
+                className={`rounded-xl px-3 py-1.5 font-mono text-xs transition ${
+                  selectedVideoStream === 'demo'
+                    ? 'bg-rose-500 font-bold text-white shadow-md shadow-rose-500/30'
+                    : 'border border-white/10 bg-white/[0.04] text-slate-300 hover:bg-white/[0.08]'
+                }`}
+                onClick={() => setSelectedVideoStream('demo')}
+                type="button"
+              >
+                📺 Dell Serial Monitor (36s)
+              </button>
+            </div>
           </div>
 
           <div className="mt-8 grid gap-8 lg:grid-cols-12 items-start">
@@ -596,7 +692,11 @@ export function ResultsPage() {
               <div className="flex items-center justify-between border-b border-white/10 bg-[#050c14] px-4 py-3">
                 <div className="flex items-center gap-2 font-mono text-xs text-slate-300">
                   <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Arduino IDE 2.x Serial Monitor · COM4 @ 115200</span>
+                  <span>
+                    {selectedVideoStream === 'obs'
+                      ? 'OBS Studio Hardware Demo · ESP32 + 3 Sensors (COM4 @ 115200)'
+                      : 'Arduino IDE 2.x Serial Monitor · COM4 @ 115200'}
+                  </span>
                 </div>
                 <button
                   className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/[0.06] px-2.5 py-1 font-mono text-[11px] text-cyan-300 hover:bg-white/[0.12] transition"
@@ -615,16 +715,25 @@ export function ResultsPage() {
                     videoRotated ? '-rotate-90 scale-90 sm:scale-95' : ''
                   }`}
                   controls
+                  key={selectedVideoStream}
                   playsInline
-                  poster="/docs/iot-video-poster.jpg"
+                  poster={selectedVideoStream === 'obs' ? '/docs/iot-system-demo-poster.jpg' : '/docs/iot-video-poster.jpg'}
                   preload="metadata"
-                  src="/docs/iot-system-demo.mp4"
+                  src={selectedVideoStream === 'obs' ? '/videos/esp32-obs-wiring-demo.mp4' : '/docs/iot-system-demo.mp4'}
                 />
               </div>
 
               <div className="border-t border-white/10 bg-[#07121f] p-4 text-xs font-mono flex flex-wrap items-center justify-between gap-3 text-slate-400">
-                <span>Direct capture from Dell test laptop</span>
-                <span className="text-cyan-300">720×1280 @ 30 FPS · H.264 MP4 (36s)</span>
+                <span>
+                  {selectedVideoStream === 'obs'
+                    ? 'Captured via OBS Studio from hardware test setup'
+                    : 'Direct capture from Dell test laptop'}
+                </span>
+                <span className="text-cyan-300">
+                  {selectedVideoStream === 'obs'
+                    ? '1080p @ 60 FPS · H.264 MP4 (11.4MB)'
+                    : '720×1280 @ 30 FPS · H.264 MP4 (36s)'}
+                </span>
               </div>
             </div>
 
@@ -896,6 +1005,67 @@ export function ResultsPage() {
                 </div>
               )
             })}
+          </div>
+
+          <div className="mt-6 overflow-hidden rounded-2xl border border-cyan-500/25 bg-[#091524] shadow-xl">
+            <div className="border-b border-white/[0.08] p-5 sm:p-6">
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-cyan-400">
+                Sensor Technologies
+              </span>
+              <h3 className="mt-1 text-xl font-bold text-white">How the Sensors Work</h3>
+              <p className="mt-2 max-w-4xl text-sm leading-relaxed text-slate-300">
+                The ESP32 reads three sensors to monitor the environment: distance, ambient light,
+                and soil moisture. It packages their measurements and sends them to the Raspberry Pi
+                over Wi-Fi using MQTT.
+              </p>
+            </div>
+
+            <div className="grid gap-4 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-3">
+              <article className="rounded-xl border border-cyan-500/20 bg-cyan-950/20 p-4">
+                <h4 className="font-semibold text-cyan-200">VL53L0X time-of-flight distance</h4>
+                <p className="mt-2 text-xs leading-relaxed text-slate-300 sm:text-sm">
+                  Sends out invisible infrared light and measures how long its reflection takes to
+                  return, calculating the distance to a nearby surface. It can monitor proximity or
+                  the distance to a target without touching it. The ESP32 reads it over I²C on
+                  GPIO 21/22.
+                </p>
+              </article>
+              <article className="rounded-xl border border-amber-500/20 bg-amber-950/20 p-4">
+                <h4 className="font-semibold text-amber-200">BH1750 ambient light</h4>
+                <p className="mt-2 text-xs leading-relaxed text-slate-300 sm:text-sm">
+                  A light-sensitive photodiode measures incoming visible light, and the sensor
+                  reports illuminance in lux. This helps track whether the monitored area is bright
+                  or dim. The ESP32 reads it over a separate I²C bus on GPIO 18/19.
+                </p>
+              </article>
+              <article className="rounded-xl border border-emerald-500/20 bg-emerald-950/20 p-4 sm:col-span-2 lg:col-span-1">
+                <h4 className="font-semibold text-emerald-200">Capacitive soil moisture</h4>
+                <p className="mt-2 text-xs leading-relaxed text-slate-300 sm:text-sm">
+                  Senses changes in the soil&apos;s electrical properties as its water content
+                  changes, producing an analog voltage. The ESP32 samples that signal on ADC1
+                  GPIO 34 and maps calibrated dry and wet readings to a moisture percentage.
+                  This helps determine when plants may need watering.
+                </p>
+              </article>
+            </div>
+
+            <div className="border-t border-white/[0.08] p-5 sm:p-6">
+              <h4 className="mb-3 text-sm font-bold text-white">ESP32 Sensor Wiring Demonstration</h4>
+              <video
+                aria-label="ESP32 sensor wiring demonstration"
+                className="aspect-video w-full rounded-xl bg-black object-contain"
+                controls
+                playsInline
+                preload="metadata"
+                src="/videos/esp32-obs-wiring-demo.mp4"
+              >
+                Your browser does not support embedded video.
+              </video>
+              <p className="mt-3 text-xs leading-relaxed text-slate-400">
+                Watch the ESP32 and sensor wiring demonstration. Use the player controls to pause,
+                seek, adjust the volume, or view it full screen.
+              </p>
+            </div>
           </div>
         </section>
 

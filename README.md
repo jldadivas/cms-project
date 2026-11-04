@@ -52,6 +52,8 @@ Open `http://localhost:3000` to explore:
 - `/how-it-works` - Step-by-step pipeline from hardware sensors to mobile display
 - `/esp32` - Dual I2C wiring diagrams and PubSubClient configuration
 - `/raspberry-pi` - Mosquitto broker setup, SQLite schema, and FastAPI service
+- `/mqtt` - MQTT role, Mosquitto setup, ESP32 publisher, Pi subscriber, and message troubleshooting
+- `/raspberry-pi-learning` - Raspberry Pi setup walkthrough and six modules covering Python, MQTT, FastAPI, SQLite, REST APIs, and the complete IoT system
 - `/expo-go` - React Native setup and mobile troubleshooting guide
 
 ## Project guide
