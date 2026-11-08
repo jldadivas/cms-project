@@ -334,10 +334,10 @@ export function IoTNavigation() {
             {/* Desktop Dropdown Popover */}
             {techDropdownOpen && (
               <div
-                className="absolute left-1/2 top-full z-50 mt-2 w-[420px] -translate-x-1/2 rounded-2xl border border-cyan-500/30 bg-[#081524]/95 p-3 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-150"
+                className="absolute left-1/2 top-full z-50 mt-2 flex max-h-[min(540px,calc(100vh-5rem))] w-[420px] -translate-x-1/2 flex-col overflow-hidden rounded-2xl border border-cyan-500/30 bg-[#081524]/95 p-3 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-150"
                 role="menu"
               >
-                <div className="mb-2 flex items-center justify-between gap-2 border-b border-white/[0.08] px-2.5 pb-2">
+                <div className="mb-2 flex shrink-0 items-center justify-between gap-2 border-b border-white/[0.08] px-2.5 pb-2">
                   <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-300">
                     TECHNOLOGY STACK &amp; GUIDES
                   </span>
@@ -378,7 +378,7 @@ export function IoTNavigation() {
                   </div>
                 </div>
 
-                <div className="max-h-[60vh] overflow-y-auto overscroll-contain space-y-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cyan-500/30 hover:[&::-webkit-scrollbar-thumb]:bg-cyan-400/60">
+                <div className="max-h-[300px] flex-1 overflow-y-auto overscroll-contain pr-1.5 space-y-1 [scrollbar-width:thin] [scrollbar-color:rgba(34,211,238,0.5)_rgba(255,255,255,0.06)] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-white/[0.04] [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cyan-400/50 hover:[&::-webkit-scrollbar-thumb]:bg-cyan-300">
                   {technologies.map((tech) => {
                     const Icon = tech.icon
                     const isCourse =
@@ -439,7 +439,7 @@ export function IoTNavigation() {
                 </div>
 
                 {/* Quick Learning Center & Schematic Callout */}
-                <div className="mt-2.5 rounded-xl border border-cyan-500/20 bg-cyan-950/30 p-2.5">
+                <div className="mt-2.5 shrink-0 rounded-xl border border-cyan-500/20 bg-cyan-950/30 p-2.5">
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-semibold text-cyan-200">
                       Need ESP32 Wiring Schematics?
@@ -500,10 +500,10 @@ export function IoTNavigation() {
 
             {mobileDevelopmentDropdownOpen && (
               <div
-                className="absolute right-0 top-full z-50 mt-2 w-[min(90vw,440px)] rounded-2xl border border-cyan-500/30 bg-[#081524]/95 p-3 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-150"
+                className="absolute right-0 top-full z-50 mt-2 flex max-h-[min(540px,calc(100vh-5rem))] w-[min(90vw,440px)] flex-col overflow-hidden rounded-2xl border border-cyan-500/30 bg-[#081524]/95 p-3 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-150"
                 role="menu"
               >
-                <div className="mb-2 flex items-center justify-between gap-2 border-b border-white/[0.08] px-2.5 pb-2">
+                <div className="mb-2 flex shrink-0 items-center justify-between gap-2 border-b border-white/[0.08] px-2.5 pb-2">
                   <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-300">
                     MOBILE DEVELOPMENT LEARNING PATH
                   </span>
@@ -543,7 +543,7 @@ export function IoTNavigation() {
                     </button>
                   </div>
                 </div>
-                <div className="max-h-[60vh] space-y-1 overflow-y-auto overscroll-contain">
+                <div className="max-h-[300px] flex-1 space-y-1 overflow-y-auto overscroll-contain pr-1.5 [scrollbar-width:thin] [scrollbar-color:rgba(34,211,238,0.5)_rgba(255,255,255,0.06)] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-white/[0.04] [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cyan-400/50 hover:[&::-webkit-scrollbar-thumb]:bg-cyan-300">
                   {mobileDevelopmentLinks.map(({ name, description, href, icon: Icon }) => (
                     <Link
                       className="group flex items-start gap-3 rounded-xl border border-transparent p-2.5 transition hover:border-cyan-400/20 hover:bg-white/[0.06]"
@@ -574,7 +574,7 @@ export function IoTNavigation() {
                   ))}
                 </div>
                 <Link
-                  className="mt-2 flex items-center justify-between rounded-xl border border-cyan-500/20 bg-cyan-950/30 px-3 py-2.5 text-xs font-semibold text-cyan-200 transition hover:bg-cyan-950/50"
+                  className="mt-2 shrink-0 flex items-center justify-between rounded-xl border border-cyan-500/20 bg-cyan-950/30 px-3 py-2.5 text-xs font-semibold text-cyan-200 transition hover:bg-cyan-950/50"
                   href="/mobile-app-learning"
                   onClick={() => setMobileDevelopmentDropdownOpen(false)}
                 >

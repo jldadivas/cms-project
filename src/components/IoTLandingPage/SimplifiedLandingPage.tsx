@@ -15,6 +15,7 @@ import {
   Flame,
   Globe,
   Layers,
+  Play,
   Radio,
   RefreshCw,
   Server,
@@ -23,10 +24,12 @@ import {
   Sparkles,
   Sun,
   Terminal,
+  Video,
   Waves,
   Wifi,
   Zap,
 } from 'lucide-react'
+import { OBSVideoPlayer } from '@/components/ESP32Learning/OBSVideoPlayer'
 
 const features = [
   {
@@ -275,18 +278,25 @@ export function SimplifiedLandingPage() {
 
             {/* Action Buttons */}
             <div className="mt-8 flex flex-wrap items-center gap-3.5">
+              <a
+                className="group inline-flex min-h-12 items-center gap-2.5 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 px-6 text-sm font-bold text-white shadow-lg shadow-rose-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-rose-500/40 hover:brightness-110 active:scale-95"
+                href="#demo-video"
+              >
+                <Play className="size-4 fill-current" />
+                <span>Watch Wiring Demo</span>
+              </a>
               <Link
                 className="group inline-flex min-h-12 items-center gap-2.5 rounded-xl bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 px-6 text-sm font-bold text-[#07121f] shadow-lg shadow-cyan-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-cyan-400/40 hover:brightness-105"
                 href="/how-it-works"
               >
-                <span>Explore How It Works</span>
-                <ArrowDown aria-hidden="true" className="size-4 transition-transform group-hover:translate-y-0.5" />
+                <span>How It Works</span>
+                <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
               <Link
                 className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-cyan-500/30 bg-white/[0.04] px-5 text-sm font-semibold text-slate-200 backdrop-blur-sm transition-all hover:border-cyan-400/60 hover:bg-white/[0.08] hover:text-white"
                 href="/architecture"
               >
-                <span>View Architecture</span>
+                <span>Architecture</span>
                 <ArrowRight aria-hidden="true" className="size-4 text-cyan-300" />
               </Link>
               <Link
@@ -341,6 +351,13 @@ export function SimplifiedLandingPage() {
                   className="mx-auto w-full h-auto max-h-[460px] rounded-xl object-contain object-center transition-transform duration-500 hover:scale-[1.01]"
                   src="/iot-system-hero.jpg?v=2"
                 />
+                <a
+                  className="group/btn absolute bottom-3 right-3 inline-flex items-center gap-2 rounded-xl border border-rose-500/40 bg-[#091524]/90 px-3.5 py-2 text-xs font-bold text-rose-200 shadow-xl backdrop-blur-md transition hover:border-rose-400 hover:bg-rose-500 hover:text-white"
+                  href="#demo-video"
+                >
+                  <Play className="size-3.5 fill-current text-rose-400 group-hover/btn:text-white" />
+                  <span>Watch Wiring Demo</span>
+                </a>
               </div>
             </div>
           </div>
@@ -376,6 +393,35 @@ export function SimplifiedLandingPage() {
               </div>
             </article>
           ))}
+        </section>
+
+        {/* HARDWARE DEMONSTRATION & OBS LIVE STREAM VIDEO SECTION */}
+        <section aria-labelledby="demo-video-heading" className="scroll-mt-24 pb-12 sm:pb-16" id="demo-video">
+          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-white/[0.08] pb-5">
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-rose-400">
+                <Video className="size-4" /> LIVE HARDWARE DEMONSTRATION
+              </div>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl" id="demo-video-heading">
+                ESP32 Hardware Wiring &amp; OBS Live Walkthrough
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
+                Watch the physical ESP32 connected to the VL53L0X Time-of-Flight laser distance sensor, BH1750 ambient light meter, and capacitive soil moisture probe with live Serial Monitor telemetry.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="rounded-full border border-rose-500/30 bg-rose-500/10 px-3 py-1 font-mono text-xs text-rose-300">
+                OBS Screen Recording &bull; 1080p 60fps
+              </span>
+            </div>
+          </div>
+
+          <OBSVideoPlayer
+            description="Complete hardware demonstration recorded live with OBS. Shows the physical breadboard wiring, I2C connections on pins 21/22 and 18/19, ADC1 soil sensor readings on GPIO 34, and serial output streaming to the Raspberry Pi MQTT broker."
+            fileSize="21.0 MB"
+            title="ESP32 Physical Circuit Wiring & Serial Monitor Telemetry"
+            videoSrc="/videos/esp32-obs-wiring-demo.mp4"
+          />
         </section>
 
         {/* SYSTEM ARCHITECTURE INTERACTIVE PIPELINE */}

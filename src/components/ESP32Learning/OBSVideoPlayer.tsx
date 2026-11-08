@@ -17,12 +17,14 @@ interface OBSVideoPlayerProps {
   title?: string
   description?: string
   videoSrc?: string
+  fileSize?: string
 }
 
 export function OBSVideoPlayer({
   title = 'Real-World Hardware Wiring & Serial Telemetry Demo',
   description = 'Live screen recording demonstrating the physical ESP32 connected to the VL53L0X ToF laser, BH1750 light meter, and capacitive soil probe with real-time Serial Monitor output.',
   videoSrc = '/videos/esp32-obs-wiring-demo.mp4',
+  fileSize = '21.0 MB',
 }: OBSVideoPlayerProps) {
   const [videoRotated, setVideoRotated] = useState(false)
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0)
@@ -91,7 +93,7 @@ export function OBSVideoPlayer({
             href={videoSrc}
           >
             <Download className="size-3.5" />
-            <span className="hidden sm:inline">MP4 (11.4MB)</span>
+            <span className="hidden sm:inline">MP4 ({fileSize})</span>
           </a>
         </div>
       </div>

@@ -15,23 +15,23 @@ export default async function LessonPage({ params: paramsPromise }: Args) {
   const { moduleId, lessonId } = await paramsPromise
 
   // Locate module by slug or id
-  const module = esp32CourseModules.find(
+  const currentModule = esp32CourseModules.find(
     (m) => m.slug === moduleId || m.id === moduleId
   )
-  if (!module) {
+  if (!currentModule) {
     notFound()
   }
 
   // Locate lesson by slug or id
-  const lessonIndex = module.lessons.findIndex(
+  const lessonIndex = currentModule.lessons.findIndex(
     (l) => l.slug === lessonId || l.id === lessonId
   )
   if (lessonIndex < 0) {
     notFound()
   }
 
-  const lesson = module.lessons[lessonIndex]
-  const isLastLessonInModule = lessonIndex === module.lessons.length - 1
+  const lesson = currentModule.lessons[lessonIndex]
+  const isLastLessonInModule = lessonIndex === currentModule.lessons.length - 1
 
   // Compute flattened lesson list for inter-module Previous / Next navigation
   const allFlattenedLessons = esp32CourseModules.flatMap((m) =>
@@ -43,7 +43,7 @@ export default async function LessonPage({ params: paramsPromise }: Args) {
   )
 
   const currentFlattenedIndex = allFlattenedLessons.findIndex(
-    (item) => item.moduleSlug === module.slug && item.lessonSlug === lesson.slug
+    (item) => item.moduleSlug === currentModule.slug && item.lessonSlug === lesson.slug
   )
 
   const previousLesson =
@@ -56,12 +56,12 @@ export default async function LessonPage({ params: paramsPromise }: Args) {
   return (
     <LearningLayout
       currentLessonSlug={lesson.slug}
-      currentModuleId={module.slug}
+      currentModuleId={currentModule.slug}
     >
       <LessonView
         isLastLessonInModule={isLastLessonInModule}
         lesson={lesson}
-        module={module}
+        module={currentModule}
         nextLesson={nextLesson}
         previousLesson={previousLesson}
       />
@@ -71,21 +71,21 @@ export default async function LessonPage({ params: paramsPromise }: Args) {
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { moduleId, lessonId } = await paramsPromise
-  const module = esp32CourseModules.find(
+  const currentModule = esp32CourseModules.find(
     (m) => m.slug === moduleId || m.id === moduleId
   )
-  const lesson = module?.lessons.find(
+  const lesson = currentModule?.lessons.find(
     (l) => l.slug === lessonId || l.id === lessonId
   )
 
-  if (!module || !lesson) {
+  if (!currentModule || !lesson) {
     return {
       title: 'Lesson Not Found | ESP32 Learning Center',
     }
   }
 
   return {
-    title: `${lesson.title} | ${module.title} | ESP32 Learning Center`,
+    title: `${lesson.title} | ${currentModule.title} | ESP32 Learning Center`,
     description: lesson.shortDescription,
   }
 }

@@ -31,11 +31,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: ModulePageProps): Promise<Metadata> {
   const { moduleSlug } = await params
-  const module = raspberryPiCourseModules.find((item) => item.slug === moduleSlug)
-  if (!module) return { title: 'Lesson Not Found | Raspberry Pi Learning Center' }
+  const foundModule = raspberryPiCourseModules.find((item) => item.slug === moduleSlug)
+  if (!foundModule) return { title: 'Lesson Not Found | Raspberry Pi Learning Center' }
 
   return {
-    title: `${module.title} | Raspberry Pi Learning Center`,
-    description: module.description,
+    title: `${foundModule.title} | Raspberry Pi Learning Center`,
+    description: foundModule.description,
   }
 }
