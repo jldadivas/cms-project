@@ -25,68 +25,16 @@ import {
 } from 'lucide-react'
 import {
   mobileAppLessons,
+  mobileAppLessonSlugs,
   mobileLearningLevels,
   mobileTechnologyTracks,
   type MobileAppLesson,
 } from '@/data/mobile-app-course-data'
-import {
-  mobileAppPresentations,
-  getPresentationForLesson,
-} from '@/data/mobile-app-presentations'
+import { mobileAppPresentations, getPresentationForLesson } from '@/data/mobile-app-presentations'
 import { PresentationSlideDeck } from './PresentationSlideDeck'
+import { useMobileLearningProgress } from './useMobileLearningProgress'
 
-const PROGRESS_KEY = 'mobile_app_learning_progress_v1'
-
-function useMobileLearningProgress() {
-  const [completedLessons, setCompletedLessons] = useState<string[]>([])
-  const [isLoaded, setIsLoaded] = useState(false)
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(PROGRESS_KEY)
-      if (saved) {
-        const parsed: unknown = JSON.parse(saved)
-        if (Array.isArray(parsed)) {
-          const validSlugs = new Set(mobileAppLessons.map((lesson) => lesson.slug))
-          setCompletedLessons(
-            parsed.filter(
-              (slug): slug is string =>
-                typeof slug === 'string' && validSlugs.has(slug),
-            ),
-          )
-        }
-      }
-    } catch (error) {
-      console.warn('Failed to read mobile app course progress:', error)
-    } finally {
-      setIsLoaded(true)
-    }
-  }, [])
-
-  function toggleLesson(slug: string) {
-    setCompletedLessons((current) => {
-      const next = current.includes(slug)
-        ? current.filter((item) => item !== slug)
-        : [...current, slug]
-      try {
-        localStorage.setItem(PROGRESS_KEY, JSON.stringify(next))
-      } catch (error) {
-        console.warn('Failed to save mobile app course progress:', error)
-      }
-      return next
-    })
-  }
-
-  return { completedLessons, isLoaded, toggleLesson }
-}
-
-function CourseProgress({
-  completed,
-  loaded,
-}: {
-  completed: number
-  loaded: boolean
-}) {
+function CourseProgress({ completed, loaded }: { completed: number; loaded: boolean }) {
   const percent = Math.round((completed / mobileAppLessons.length) * 100)
 
   return (
@@ -118,9 +66,7 @@ function CourseProgress({
           style={{ width: `${percent}%` }}
         />
       </div>
-      <p className="mt-2 text-xs text-slate-400">
-        Completed lessons are saved in this browser.
-      </p>
+      <p className="mt-2 text-xs text-slate-400">Completed lessons are saved in this browser.</p>
     </section>
   )
 }
@@ -172,8 +118,8 @@ function ArchitectureDiagram() {
         ))}
       </ol>
       <p className="mt-4 text-xs leading-relaxed text-slate-400">
-        The phone reads the Pi API. The current backend exposes REST endpoints; WebSocket
-        streaming is an optional extension covered in the lessons.
+        The phone reads the Pi API. The current backend exposes REST endpoints; WebSocket streaming
+        is an optional extension covered in the lessons.
       </p>
     </section>
   )
@@ -261,7 +207,7 @@ function YouTubeLessonVideo({
 }
 
 export function MobileAppLearningHub() {
-  const { completedLessons, isLoaded } = useMobileLearningProgress()
+  const { completedLessons, isLoaded } = useMobileLearningProgress(mobileAppLessonSlugs)
   const nextLesson =
     mobileAppLessons.find((lesson) => !completedLessons.includes(lesson.slug)) ??
     mobileAppLessons[0]
@@ -280,8 +226,8 @@ export function MobileAppLearningHub() {
               Mobile App <span className="text-cyan-400">Development</span>
             </h1>
             <p className="mt-4 max-w-3xl text-sm leading-relaxed text-slate-300 sm:text-base">
-              Learn Flutter with Dart or Ionic with React, configure Android tools, and build
-              mobile dashboards that display real sensor readings from an ESP32 and Raspberry Pi.
+              Learn Flutter with Dart or Ionic with React, configure Android tools, and build mobile
+              dashboards that display real sensor readings from an ESP32 and Raspberry Pi.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
@@ -315,9 +261,9 @@ export function MobileAppLearningHub() {
               See the mobile app in action
             </h2>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-300">
-              Watch the existing Expo Go app display live sensor readings supplied by the
-              Raspberry Pi API. This is a demonstration of the project mobile client, not a
-              recording of the Flutter or Ionic lessons.
+              Watch the existing Expo Go app display live sensor readings supplied by the Raspberry
+              Pi API. This is a demonstration of the project mobile client, not a recording of the
+              Flutter or Ionic lessons.
             </p>
           </div>
           <CourseVideo
@@ -341,7 +287,19 @@ export function MobileAppLearningHub() {
             {mobileTechnologyTracks.map((track) => (
               <Link
                 className="group rounded-2xl border border-white/10 bg-[#091524] p-5 transition hover:-translate-y-0.5 hover:border-cyan-400/40 hover:bg-[#0b1a2b]"
-                href={`/mobile-app-learning/${track.lessonSlug}`}
+                href={
+                  track.id === 'capacitor'
+                    ? '/mobile-app-learning/capacitor'
+                    : track.id === 'flutter'
+                      ? '/mobile-app-learning/flutter'
+                      : track.id === 'ionic'
+                        ? '/mobile-app-learning/ionic'
+                        : track.id === 'android-studio'
+                          ? '/mobile-app-learning/android-studio'
+                          : track.id === 'visual-studio-code'
+                            ? '/mobile-app-learning/vscode'
+                            : `/mobile-app-learning/${track.lessonSlug}`
+                }
                 id={track.id}
                 key={track.id}
               >
@@ -363,11 +321,17 @@ export function MobileAppLearningHub() {
                 <h3 className="mt-4 text-lg font-bold text-white group-hover:text-cyan-100">
                   {track.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-300">
-                  {track.description}
-                </p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-300">{track.description}</p>
                 <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-cyan-300">
-                  Lesson and YouTube tutorial
+                  {track.id === 'flutter'
+                    ? 'Open the complete Flutter course'
+                    : track.id === 'ionic'
+                      ? 'Open the complete Ionic course'
+                      : track.id === 'android-studio'
+                        ? 'Open the complete Android course'
+                        : track.id === 'visual-studio-code'
+                          ? 'Open the complete VS Code course'
+                          : 'Lesson and YouTube tutorial'}
                   <ArrowRight
                     aria-hidden="true"
                     className="size-3.5 transition-transform group-hover:translate-x-0.5"
@@ -385,11 +349,16 @@ export function MobileAppLearningHub() {
               <p className="font-mono text-xs font-bold uppercase tracking-wider text-cyan-400">
                 COURSE PRESENTATION SLIDE DECKS (7 DECKS)
               </p>
-              <h2 className="mt-1 text-2xl font-bold text-white sm:text-3xl" id="presentations-heading">
+              <h2
+                className="mt-1 text-2xl font-bold text-white sm:text-3xl"
+                id="presentations-heading"
+              >
                 Download & View PowerPoint Decks
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-300">
-                Official PowerPoint (.pptx) presentations aligned with each module. Download the slides for offline studying and lecturing, or view the interactive slide player embedded directly inside each lesson page.
+                Official PowerPoint (.pptx) presentations aligned with each module. Download the
+                slides for offline studying and lecturing, or view the interactive slide player
+                embedded directly inside each lesson page.
               </p>
             </div>
           </div>
@@ -474,7 +443,10 @@ export function MobileAppLearningHub() {
                       >
                         <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-cyan-400/20 bg-cyan-500/10 font-mono text-sm font-bold text-cyan-300">
                           {complete ? (
-                            <CheckCircle2 aria-label="Completed" className="size-5 text-emerald-300" />
+                            <CheckCircle2
+                              aria-label="Completed"
+                              className="size-5 text-emerald-300"
+                            />
                           ) : (
                             String(lessonNumber).padStart(2, '0')
                           )}
@@ -588,9 +560,7 @@ export function MobileAppLessonPage({ lesson }: { lesson: MobileAppLesson }) {
   const index = mobileAppLessons.findIndex((item) => item.slug === lesson.slug)
   const previous = mobileAppLessons[index - 1] ?? null
   const next = mobileAppLessons[index + 1] ?? null
-  const technologyTrack = mobileTechnologyTracks.find(
-    (track) => track.lessonSlug === lesson.slug,
-  )
+  const technologyTrack = mobileTechnologyTracks.find((track) => track.lessonSlug === lesson.slug)
   const presentation = getPresentationForLesson(lesson.slug)
   const [activeTab, setActiveTab] = useState<'presentation' | 'written'>(
     presentation ? 'presentation' : 'written',
@@ -600,7 +570,8 @@ export function MobileAppLessonPage({ lesson }: { lesson: MobileAppLesson }) {
     setActiveTab(presentation ? 'presentation' : 'written')
   }, [lesson.slug, presentation])
 
-  const { completedLessons, isLoaded, toggleLesson } = useMobileLearningProgress()
+  const { completedLessons, isLoaded, toggleLesson } =
+    useMobileLearningProgress(mobileAppLessonSlugs)
   const isComplete = completedLessons.includes(lesson.slug)
   const levelNumber = mobileLearningLevels.findIndex((item) => item.level === lesson.level) + 1
 
@@ -626,7 +597,10 @@ export function MobileAppLessonPage({ lesson }: { lesson: MobileAppLesson }) {
               <BookOpen aria-hidden="true" className="size-4 text-cyan-300" />
               <h2 className="text-sm font-bold text-white">Course lessons</h2>
             </div>
-            <nav aria-label="Mobile app course lessons" className="max-h-[45vh] space-y-1 overflow-y-auto pr-1 lg:max-h-[calc(100vh-11rem)]">
+            <nav
+              aria-label="Mobile app course lessons"
+              className="max-h-[45vh] space-y-1 overflow-y-auto pr-1 lg:max-h-[calc(100vh-11rem)]"
+            >
               {mobileLearningLevels.map(({ level }) => (
                 <div className="mb-3" key={level}>
                   <p className="mb-1 px-2 font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-400">
@@ -649,9 +623,15 @@ export function MobileAppLessonPage({ lesson }: { lesson: MobileAppLesson }) {
                           key={item.slug}
                         >
                           {complete ? (
-                            <CheckCircle2 aria-hidden="true" className="mt-0.5 size-3.5 shrink-0 text-emerald-300" />
+                            <CheckCircle2
+                              aria-hidden="true"
+                              className="mt-0.5 size-3.5 shrink-0 text-emerald-300"
+                            />
                           ) : (
-                            <Circle aria-hidden="true" className="mt-0.5 size-3.5 shrink-0 text-slate-600" />
+                            <Circle
+                              aria-hidden="true"
+                              className="mt-0.5 size-3.5 shrink-0 text-slate-600"
+                            />
                           )}
                           {item.title}
                         </Link>
@@ -728,7 +708,9 @@ export function MobileAppLessonPage({ lesson }: { lesson: MobileAppLesson }) {
                     >
                       <ArrowLeft aria-hidden="true" className="size-4 shrink-0 text-cyan-400" />
                       <span className="min-w-0">
-                        <span className="block text-[10px] uppercase text-slate-400">Previous lesson</span>
+                        <span className="block text-[10px] uppercase text-slate-400">
+                          Previous lesson
+                        </span>
                         <span className="block truncate font-semibold">{previous.title}</span>
                       </span>
                     </Link>
@@ -741,7 +723,9 @@ export function MobileAppLessonPage({ lesson }: { lesson: MobileAppLesson }) {
                       href={`/mobile-app-learning/${next.slug}`}
                     >
                       <span className="min-w-0 text-right">
-                        <span className="block text-[10px] uppercase text-cyan-300/70">Next lesson</span>
+                        <span className="block text-[10px] uppercase text-cyan-300/70">
+                          Next lesson
+                        </span>
                         <span className="block truncate font-semibold">{next.title}</span>
                       </span>
                       <ArrowRight aria-hidden="true" className="size-4 shrink-0 text-cyan-300" />
@@ -801,7 +785,10 @@ export function MobileAppLessonPage({ lesson }: { lesson: MobileAppLesson }) {
                         className="flex items-start gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 text-sm leading-relaxed text-slate-300"
                         key={objective}
                       >
-                        <CheckCircle2 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-cyan-400" />
+                        <CheckCircle2
+                          aria-hidden="true"
+                          className="mt-0.5 size-4 shrink-0 text-cyan-400"
+                        />
                         {objective}
                       </li>
                     ))}
@@ -848,7 +835,10 @@ export function MobileAppLessonPage({ lesson }: { lesson: MobileAppLesson }) {
                   </div>
                   <ul className="mt-4 grid gap-2 sm:grid-cols-2">
                     {lesson.tools.map((tool) => (
-                      <li className="rounded-xl border border-white/[0.06] bg-[#06101c] p-3 text-sm text-slate-300" key={tool}>
+                      <li
+                        className="rounded-xl border border-white/[0.06] bg-[#06101c] p-3 text-sm text-slate-300"
+                        key={tool}
+                      >
                         {tool}
                       </li>
                     ))}
@@ -865,7 +855,9 @@ export function MobileAppLessonPage({ lesson }: { lesson: MobileAppLesson }) {
                         </span>
                         <div className="min-w-0 flex-1 rounded-xl border border-white/[0.07] bg-[#06101c] p-4">
                           <h3 className="text-sm font-semibold text-white">{step.title}</h3>
-                          <p className="mt-1.5 text-sm leading-relaxed text-slate-300">{step.detail}</p>
+                          <p className="mt-1.5 text-sm leading-relaxed text-slate-300">
+                            {step.detail}
+                          </p>
                         </div>
                       </li>
                     ))}
@@ -879,7 +871,8 @@ export function MobileAppLessonPage({ lesson }: { lesson: MobileAppLesson }) {
                       filename: 'Terminal',
                       language: 'bash',
                       code: lesson.commands,
-                      explanation: 'Run commands from the project directory indicated by the lesson. Commands that require platform-specific paths may need adjustment for your operating system.',
+                      explanation:
+                        'Run commands from the project directory indicated by the lesson. Commands that require platform-specific paths may need adjustment for your operating system.',
                     }}
                   />
                 </section>
@@ -912,12 +905,19 @@ export function MobileAppLessonPage({ lesson }: { lesson: MobileAppLesson }) {
                 </section>
 
                 <section className="rounded-2xl border border-white/10 bg-[#091524] p-5 sm:p-7">
-                  <h2 className="text-lg font-bold text-white">Troubleshooting and common issues</h2>
+                  <h2 className="text-lg font-bold text-white">
+                    Troubleshooting and common issues
+                  </h2>
                   <dl className="mt-4 space-y-3">
                     {lesson.troubleshooting.map((item) => (
-                      <div className="rounded-xl border border-white/[0.06] bg-[#06101c] p-4" key={item.problem}>
+                      <div
+                        className="rounded-xl border border-white/[0.06] bg-[#06101c] p-4"
+                        key={item.problem}
+                      >
                         <dt className="text-sm font-semibold text-amber-200">{item.problem}</dt>
-                        <dd className="mt-1.5 text-sm leading-relaxed text-slate-300">{item.solution}</dd>
+                        <dd className="mt-1.5 text-sm leading-relaxed text-slate-300">
+                          {item.solution}
+                        </dd>
                       </div>
                     ))}
                   </dl>
@@ -952,7 +952,9 @@ export function MobileAppLessonPage({ lesson }: { lesson: MobileAppLesson }) {
                     >
                       <ArrowLeft aria-hidden="true" className="size-4 shrink-0 text-cyan-400" />
                       <span className="min-w-0">
-                        <span className="block text-[10px] uppercase text-slate-400">Previous lesson</span>
+                        <span className="block text-[10px] uppercase text-slate-400">
+                          Previous lesson
+                        </span>
                         <span className="block truncate font-semibold">{previous.title}</span>
                       </span>
                     </Link>
@@ -965,7 +967,9 @@ export function MobileAppLessonPage({ lesson }: { lesson: MobileAppLesson }) {
                       href={`/mobile-app-learning/${next.slug}`}
                     >
                       <span className="min-w-0 text-right">
-                        <span className="block text-[10px] uppercase text-cyan-300/70">Next lesson</span>
+                        <span className="block text-[10px] uppercase text-cyan-300/70">
+                          Next lesson
+                        </span>
                         <span className="block truncate font-semibold">{next.title}</span>
                       </span>
                       <ArrowRight aria-hidden="true" className="size-4 shrink-0 text-cyan-300" />

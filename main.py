@@ -152,7 +152,11 @@ async def lifespan(_app: FastAPI):
 
 
 app = FastAPI(title="UT-CMS Sensor API", lifespan=lifespan)
-origins = [origin.strip() for origin in os.getenv("CORS_ORIGINS", "*").split(",") if origin.strip()]
+origins = [
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+    if origin.strip()
+]
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_methods=["GET"], allow_headers=["*"])
 
 

@@ -88,7 +88,8 @@ const technologies: TechDropdownItem[] = [
   {
     name: 'FastAPI Backend',
     sublabel: 'REST API & MQTT Bridge',
-    description: 'Python ASGI server that bridges Mosquitto MQTT to HTTP REST endpoints for Expo Go',
+    description:
+      'Python ASGI server that bridges Mosquitto MQTT to HTTP REST endpoints for Expo Go',
     href: '/fastapi',
     badge: 'API Server',
     icon: Zap,
@@ -105,32 +106,33 @@ const primaryNavigation = [
 const mobileDevelopmentLinks = [
   {
     name: 'Flutter (Dart)',
-    description: 'Dart, widgets, APIs, and Flutter dashboards',
-    href: '/mobile-app-learning#flutter',
+    description: 'Complete Flutter and Dart course, from setup to IoT apps',
+    href: '/mobile-app-learning/flutter',
     icon: Layers,
   },
   {
     name: 'Ionic Framework',
-    description: 'Cross-platform mobile UI with Ionic React',
-    href: '/mobile-app-learning#ionic',
+    description: 'Complete Ionic course from web components to native IoT apps',
+    href: '/mobile-app-learning/ionic',
     icon: Code2,
   },
   {
     name: 'Capacitor',
-    description: 'Connect web apps to native Android features',
-    href: '/mobile-app-learning#capacitor',
+    description: 'Learn Capacitor from first project to native Android and IoT apps',
+    href: '/mobile-app-learning/capacitor',
     icon: Smartphone,
   },
   {
     name: 'Android Studio',
-    description: 'Android SDK, emulators, and app builds',
-    href: '/mobile-app-learning#android-studio',
+    description:
+      'Complete native Android course with Kotlin, Java, APIs, sensors, and release builds',
+    href: '/mobile-app-learning/android-studio',
     icon: Wrench,
   },
   {
     name: 'Visual Studio Code',
-    description: 'Editor setup, debugging, and Git workflow',
-    href: '/mobile-app-learning#visual-studio-code',
+    description: 'Complete course from editor setup through web, mobile, and IoT workflows',
+    href: '/mobile-app-learning/vscode',
     icon: Terminal,
   },
   {
@@ -153,8 +155,7 @@ export function IoTNavigation() {
   const [techDropdownOpen, setTechDropdownOpen] = useState(false)
   const [techDropdownLocked, setTechDropdownLocked] = useState(false)
   const [mobileDevelopmentDropdownOpen, setMobileDevelopmentDropdownOpen] = useState(false)
-  const [mobileDevelopmentDropdownLocked, setMobileDevelopmentDropdownLocked] =
-    useState(false)
+  const [mobileDevelopmentDropdownLocked, setMobileDevelopmentDropdownLocked] = useState(false)
   const [mobileTechExpanded, setMobileTechExpanded] = useState(true)
   const [mobileDevelopmentExpanded, setMobileDevelopmentExpanded] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -249,7 +250,10 @@ export function IoTNavigation() {
           href="/"
         >
           <div className="relative grid size-10 place-items-center rounded-xl bg-gradient-to-br from-cyan-400 via-sky-500 to-blue-600 text-[#07121f] shadow-lg shadow-cyan-500/25 transition-all group-hover:shadow-cyan-400/40">
-            <Activity aria-hidden="true" className="size-5 text-[#07121f] transition-transform group-hover:rotate-12" />
+            <Activity
+              aria-hidden="true"
+              className="size-5 text-[#07121f] transition-transform group-hover:rotate-12"
+            />
             <span className="absolute -top-1 -right-1 flex size-3">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex size-3 rounded-full border-2 border-[#07121f] bg-emerald-400" />
@@ -589,8 +593,7 @@ export function IoTNavigation() {
           {primaryNavigation.slice(1).map(({ label, href }) => {
             const isAnchor = href.startsWith('/#')
             const active =
-              !isAnchor &&
-              (pathname === href || (href !== '/' && pathname.startsWith(`${href}/`)))
+              !isAnchor && (pathname === href || (href !== '/' && pathname.startsWith(`${href}/`)))
 
             return (
               <Link
@@ -711,9 +714,7 @@ export function IoTNavigation() {
               <button
                 aria-expanded={mobileDevelopmentExpanded}
                 className="flex w-full items-center justify-between text-xs font-bold uppercase tracking-wider text-cyan-300"
-                onClick={() =>
-                  setMobileDevelopmentExpanded((isExpanded) => !isExpanded)
-                }
+                onClick={() => setMobileDevelopmentExpanded((isExpanded) => !isExpanded)}
                 type="button"
               >
                 <span>Mobile App Development</span>

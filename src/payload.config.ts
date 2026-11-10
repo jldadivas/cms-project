@@ -17,6 +17,7 @@ import { getServerSideURL } from './utilities/getURL'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+const localDevelopmentOrigins = process.env.NODE_ENV === 'development' ? ['http://localhost:3000'] : []
 
 export default buildConfig({
   admin: {
@@ -63,7 +64,8 @@ export default buildConfig({
     },
   }),
   collections: [Pages, Posts, Media, Categories, Users],
-  cors: [getServerSideURL()].filter(Boolean),
+  cors: [getServerSideURL(), ...localDevelopmentOrigins],
+  csrf: [getServerSideURL(), ...localDevelopmentOrigins],
   globals: [Header, Footer],
   plugins,
   secret: process.env.PAYLOAD_SECRET,

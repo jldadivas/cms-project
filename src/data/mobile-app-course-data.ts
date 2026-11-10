@@ -831,3 +831,5 @@ export const mobileTechnologyTracks = [
     },
   },
 ]
+
+export const mobileAppLessonSlugs = mobileAppLessons.map((lesson) => lesson.slug)

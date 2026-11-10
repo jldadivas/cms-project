@@ -5,7 +5,7 @@ This is a separate React Native application intended to run in Expo Go. It fetch
 ## Run in Expo Go
 
 1. Install Node.js 22.13 or newer and npm.
-2. Copy `.env.example` to `.env` and set `EXPO_PUBLIC_API_BASE_URL` to the Raspberry Pi's reachable LAN URL, such as `http://<PI_LAN_IP>:8000`.
+2. Copy `.env.example` to `.env` and set `EXPO_PUBLIC_API_BASE_URL` to the backend computer's reachable LAN URL, such as `http://<PI_LAN_IP>:8080`.
 3. From this directory, run `npm install` and `npm start`.
 4. Install Expo Go on the phone and scan the QR code. Allow LAN access if prompted.
 
