@@ -27,11 +27,29 @@ const NEXT_PUBLIC_SERVER_URL = usesLocalDevelopmentURL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
       : process.env.__NEXT_PRIVATE_ORIGIN || 'http://localhost:3000')
 
+process.env.NEXT_PUBLIC_SERVER_URL = NEXT_PUBLIC_SERVER_URL
+
+if (usesLocalDevelopmentURL) {
+  console.info(`Network: ${NEXT_PUBLIC_SERVER_URL}`)
+}
+
 const privateIPv4OriginPatterns = [
   '10.*.*.*',
   ...Array.from({ length: 16 }, (_, index) => `172.${index + 16}.*.*`),
   '192.168.*.*',
 ]
+
+const corsOriginHostnames = (process.env.CORS_ORIGINS ?? '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean)
+  .flatMap((origin) => {
+    try {
+      return [new URL(origin).hostname]
+    } catch {
+      return []
+    }
+  })
 
 const allowedDevOrigins = [
   new URL(NEXT_PUBLIC_SERVER_URL).hostname,
@@ -39,6 +57,7 @@ const allowedDevOrigins = [
     ? [
         ...getLocalDevelopmentOrigins().map((origin) => new URL(origin).hostname),
         ...privateIPv4OriginPatterns,
+        ...corsOriginHostnames,
       ]
     : []),
 ]

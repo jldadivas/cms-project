@@ -56,19 +56,24 @@ the dev server after changing networks so it can detect the new address. The
 Payload SQLite database remains a local file and does not need a network port.
 
 On Windows, allow devices on the local subnet through Windows Firewall from an
-elevated PowerShell prompt:
+elevated PowerShell prompt. Use the profile shown for the connected Wi-Fi in
+Windows Network settings (`Public` for this computer's current Wi-Fi):
 
 ```powershell
-New-NetFirewallRule -DisplayName "CMS Website LAN" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3000 -RemoteAddress LocalSubnet -Profile Private
+New-NetFirewallRule -DisplayName "CMS Website LAN" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3000 -RemoteAddress LocalSubnet -Profile Public
 ```
 
+This only allows TCP port 3000 from devices on the directly connected subnet.
 Open the LAN URL on a phone or another computer connected to the same network.
+If Windows reports that local firewall rules are managed by policy, ask the
+network administrator to allow inbound TCP port 3000 from the local subnet for
+the active network profile; a local rule cannot override that policy.
 If the optional FastAPI telemetry backend is also running, include
 `http://<YOUR_COMPUTER_WIFI_IPV4>:3000` in `CORS_ORIGINS`, allow its port, and use
 `http://<YOUR_WIFI_IPV4>:8080` for its API:
 
 ```powershell
-New-NetFirewallRule -DisplayName "CMS Telemetry API LAN" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8080 -RemoteAddress LocalSubnet -Profile Private
+New-NetFirewallRule -DisplayName "CMS Telemetry API LAN" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8080 -RemoteAddress LocalSubnet -Profile Public
 ```
 
 Open `http://localhost:3000` on this computer to explore:
