@@ -13,11 +13,13 @@ import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
-import { getServerSideURL } from './utilities/getURL'
+import { getServerSideURL } from './utilities/getServerSideURL'
+import { getLocalDevelopmentOrigins } from './utilities/getLocalDevelopmentOrigins'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
-const localDevelopmentOrigins = process.env.NODE_ENV === 'development' ? ['http://localhost:3000'] : []
+const localDevelopmentOrigins =
+  process.env.NODE_ENV === 'development' ? getLocalDevelopmentOrigins() : []
 
 export default buildConfig({
   admin: {

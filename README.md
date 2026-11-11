@@ -46,31 +46,29 @@ Scan the QR code with Expo Go on iOS or Android. Ensure your phone and Raspberry
 npm install
 npm run dev
 ```
-To open the portal from another device on the same Wi-Fi network, set
-`NEXT_PUBLIC_SERVER_URL` in the root `.env` to
-`http://<YOUR_WIFI_IPV4>:3000` (replace the placeholder with this computer's
-Wi-Fi IPv4 address), then run `npm run dev`. The dev server listens on all
-network interfaces. The website and its Payload API share port 3000, so use
-`http://<YOUR_WIFI_IPV4>:3000` for the site and
-`http://<YOUR_WIFI_IPV4>:3000/api` for its API. The Payload SQLite database
-remains a local file and does not need a network port.
+The dev server listens on all network interfaces, automatically allows the
+computer's current IPv4 addresses, and resolves `NEXT_PUBLIC_SERVER_URL` set to
+`localhost` to the current Wi-Fi IPv4 address during development. You do not
+need to edit `.env` when that address changes. On the other device, open
+`http://<YOUR_COMPUTER_WIFI_IPV4>:3000`; find the current address with
+`ipconfig` on Windows. The website and its Payload API share port 3000. Restart
+the dev server after changing networks so it can detect the new address. The
+Payload SQLite database remains a local file and does not need a network port.
 
-On Windows, allow only the local Wi-Fi subnet through Windows Firewall from an
-elevated PowerShell prompt (adjust the subnet if your router uses a different
-one):
+On Windows, allow devices on the local subnet through Windows Firewall from an
+elevated PowerShell prompt:
 
 ```powershell
-New-NetFirewallRule -DisplayName "CMS Website LAN" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3000 -RemoteAddress 192.168.100.0/24 -Profile Private
+New-NetFirewallRule -DisplayName "CMS Website LAN" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3000 -RemoteAddress LocalSubnet -Profile Private
 ```
 
-Open the displayed LAN URL on a phone or another computer connected to the same
-Wi-Fi network. If the optional FastAPI telemetry backend is also running, set
-`CORS_ORIGINS` in `.env` to include
-`http://<YOUR_WIFI_IPV4>:3000`, allow its port, and use
+Open the LAN URL on a phone or another computer connected to the same network.
+If the optional FastAPI telemetry backend is also running, include
+`http://<YOUR_COMPUTER_WIFI_IPV4>:3000` in `CORS_ORIGINS`, allow its port, and use
 `http://<YOUR_WIFI_IPV4>:8080` for its API:
 
 ```powershell
-New-NetFirewallRule -DisplayName "CMS Telemetry API LAN" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8080 -RemoteAddress 192.168.100.0/24 -Profile Private
+New-NetFirewallRule -DisplayName "CMS Telemetry API LAN" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8080 -RemoteAddress LocalSubnet -Profile Private
 ```
 
 Open `http://localhost:3000` on this computer to explore:

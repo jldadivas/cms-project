@@ -2,19 +2,49 @@ import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import {
+  getLocalDevelopmentOrigins,
+  getLocalDevelopmentServerURL,
+} from './src/utilities/getLocalDevelopmentOrigins'
 
 const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 import { redirects } from './redirects'
 
-const NEXT_PUBLIC_SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : process.env.__NEXT_PRIVATE_ORIGIN || 'http://localhost:3000')
+const configuredServerURL = process.env.NEXT_PUBLIC_SERVER_URL
+const configuredServerHostname = configuredServerURL
+  ? new URL(configuredServerURL).hostname
+  : undefined
+const usesLocalDevelopmentURL =
+  process.env.NODE_ENV === 'development' &&
+  (!configuredServerHostname ||
+    configuredServerHostname === 'localhost' ||
+    configuredServerHostname === '127.0.0.1')
+const NEXT_PUBLIC_SERVER_URL = usesLocalDevelopmentURL
+  ? getLocalDevelopmentServerURL()
+  : configuredServerURL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : process.env.__NEXT_PRIVATE_ORIGIN || 'http://localhost:3000')
+
+const privateIPv4OriginPatterns = [
+  '10.*.*.*',
+  ...Array.from({ length: 16 }, (_, index) => `172.${index + 16}.*.*`),
+  '192.168.*.*',
+]
+
+const allowedDevOrigins = [
+  new URL(NEXT_PUBLIC_SERVER_URL).hostname,
+  ...(process.env.NODE_ENV === 'development'
+    ? [
+        ...getLocalDevelopmentOrigins().map((origin) => new URL(origin).hostname),
+        ...privateIPv4OriginPatterns,
+      ]
+    : []),
+]
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: [new URL(NEXT_PUBLIC_SERVER_URL).hostname],
+  allowedDevOrigins: [...new Set(allowedDevOrigins)],
   // Temporarily required on Windows until Next.js fixes Turbopack Sass resolution.
   // See: https://github.com/vercel/next.js/issues/86431
   sassOptions: {
